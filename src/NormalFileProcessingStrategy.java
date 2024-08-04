@@ -1,6 +1,5 @@
 import model.Company;
 
-import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,19 +18,19 @@ public class NormalFileProcessingStrategy implements FileProcessingStrategy{
     private NormalFileProcessingStrategy(){}
 
     @Override
-    public int totalCapitalOfHeadquarters(List<Company> companies) {
-        return companies.stream()
-                .filter(company -> company.isHeadquarter() &&
-                        company.getCountry().equals(CODE))
-                .reduce(0, (partialResult, company)-> partialResult+ company.getCapital(), Integer::sum);
+    public long totalCompanyLocatedInCityByCode(List<Company> companies) {
+        long count= companies.stream()
+                .filter(company -> company.getState().equals(CODE))
+                .count();
+        return count;
     }
 
     @Override
     public List<String> nameCompaniesCountry(List<Company> companies) {
         return companies.stream()
-                .filter(company -> company.getCountry().equals(CODE))
+                .filter(company -> company.getState().equals(CODE))
                 // using comparing static method to make code more concise
-                .sorted(Comparator.comparing(Company::getCapital).reversed())
+                .sorted(Comparator.comparing(Company::getAddress).reversed())
                 .map(Company::getName)
                 .collect(Collectors.toList());
 
